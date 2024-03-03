@@ -1,4 +1,4 @@
-﻿namespace CustomControls.RJControls
+﻿namespace DoNotWasteYourTime.CustomTools
 {
     partial class RJTextBox
     {

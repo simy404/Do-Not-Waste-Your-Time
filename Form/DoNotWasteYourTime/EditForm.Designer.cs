@@ -1,4 +1,6 @@
-﻿namespace DoNotWasteYourTime
+﻿using DoNotWasteYourTime.CustomTools;
+
+namespace DoNotWasteYourTime
 {
 	partial class EditGroup
 	{
@@ -35,10 +37,10 @@
 			this.sites_label = new System.Windows.Forms.Label();
 			this.add_site_label = new System.Windows.Forms.Label();
 			this.add_site_button = new System.Windows.Forms.PictureBox();
-			this.add_site_textbox = new CustomControls.RJControls.RJTextBox();
-			this.save_button = new CustomControls.RJControls.RJButton();
-			this.group_name_textbox = new CustomControls.RJControls.RJTextBox();
-			this.description_textbox = new CustomControls.RJControls.RJTextBox();
+			this.add_site_textbox = new RJTextBox();
+			this.save_button = new RJButton();
+			this.group_name_textbox = new RJTextBox();
+			this.description_textbox = new RJTextBox();
 			this.remove_site_button = new System.Windows.Forms.PictureBox();
 			((System.ComponentModel.ISupportInitialize)(this.add_site_button)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.remove_site_button)).BeginInit();
@@ -221,15 +223,15 @@
 
 		#endregion
 
-		private CustomControls.RJControls.RJTextBox description_textbox;
+		private RJTextBox description_textbox;
 		private System.Windows.Forms.Label description_label;
-		private CustomControls.RJControls.RJTextBox group_name_textbox;
+		private RJTextBox group_name_textbox;
 		private System.Windows.Forms.Label group_name_label;
 		private System.Windows.Forms.ListBox sites_listbox;
 		private System.Windows.Forms.Label sites_label;
-		private CustomControls.RJControls.RJButton save_button;
+		private RJButton save_button;
 		private System.Windows.Forms.Label add_site_label;
-		private CustomControls.RJControls.RJTextBox add_site_textbox;
+		private RJTextBox add_site_textbox;
 		private System.Windows.Forms.PictureBox add_site_button;
 		private System.Windows.Forms.PictureBox remove_site_button;
 	}

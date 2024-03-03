@@ -1,149 +1,118 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 using System.IO;
-using System.Text.Json;
-using System.Configuration;
-using CustomControls.RJControls;
-using DevExpress.XtraEditors.ColorPick.Picker;
+using System.Reflection;
+using System.Resources;
+using DoNotWasteYourTime.Helpers;
+using ComponentFactory.Krypton.Toolkit;
+using DevExpress.Data.Filtering.Helpers;
+using DoNotWasteYourTime.CustomTools;
 
 namespace DoNotWasteYourTime
 {
-	public partial class Form1 : Form
+	public partial class Form1 : KryptonForm
 	{
-		public static SiteBlockerManager _Manager;
+		public static SiteBlockerManager Manager;
+		readonly ResourceManager rm = new ResourceManager("DoNotWasteYourTime.Properties.Resources",Assembly.GetExecutingAssembly());
 		public Form1()
 		{
 			InitializeComponent();
 		}
-
+		
 		private void Form1_Load(object sender, EventArgs e)
 		{
-			//ui configuration
-			app_name.Text = $"DO NOT\nWASTE\nYOUR TİME";
-
-			string FilePath = $"{Application.StartupPath}\\x.json";
+			var filePath = $"{Application.StartupPath}\\x.json";
 			
-			if (File.Exists(FilePath))
+			if (File.Exists(filePath))
 			{
-				using(StreamReader streamReader = new StreamReader(FilePath))
+				using var streamReader = new StreamReader(filePath);
+				var json = streamReader.ReadToEnd();
+				
+				if (string.IsNullOrEmpty(json)) 
+					throw new NullReferenceException("json file does not read");
+
+				Manager = JsonConvert.DeserializeObject<SiteBlockerManager>(json);
+				Manager.FilePath = filePath;
+				
+				foreach (var group in Manager.BlockedSiteGroups)
 				{
-					string json = streamReader.ReadToEnd();
-
-					_Manager = JsonConvert.DeserializeObject<SiteBlockerManager>(json);
-					_Manager.filePath = FilePath;
-
-					foreach (var group in _Manager.blockedSiteGroups)
-					{
-						Panel panel = CreateGroupPanel(group);
-						flowLayoutPanel1.Controls.Add(panel);							
-					}						
-				}		
+					var panel = CreateGroupPanel(group);
+					flowLayoutPanel1.Controls.Add(panel);							
+				}
 			}
 			else 
 			{
-				File.Create(FilePath);
-			}						
+				File.Create(filePath);
+			}
+			
         }
 		
 		private Panel CreateGroupPanel(BlockedSiteGroup group)
 		{
-			Panel panel = new Panel();
-			panel.BorderStyle = BorderStyle.FixedSingle;
-			panel.Margin = new Padding(5);
-
-			//Get Panel Size
-			int panelWidth = panel.Width;
-			int panelHeight = panel.Height;
-
-			//Name Label UI configuration
-			Label nameLabel = new Label();
-			nameLabel.Text = group.Name;
-			nameLabel.Font = new Font(FontFamily.GenericSansSerif, 10, FontStyle.Bold);
-			nameLabel.AutoSize = true;
-
-
-			//Description Label configuration
-			Label descriptionLabel = new Label();
-			descriptionLabel.Text = group.Description;
-			descriptionLabel.AutoSize = true;
-			descriptionLabel.Location = new Point(0, nameLabel.Height + 5);
-
-
-			//Edit Button configuration
-			Button editButton = new RJButton();
-			editButton.Text = "Edit";
-			editButton.BackColor = Color.FromArgb(69, 69, 69);
-			editButton.Click += (x, y) =>
+			var panel = new RJPanel()
 			{
-				EditGroup form = new EditGroup(group,nameLabel,descriptionLabel);
-				form.StartPosition = FormStartPosition.CenterScreen;
-				form.ShowDialog();
+				BorderStyle = BorderStyle.None,
+				Width = (flowLayoutPanel1.Size.Width-30),
+				Height = flowLayoutPanel1.Size.Height/2,
+				BackColor = Color.FromArgb(240, 240, 240),
+				Margin =  new Padding(0,0,0,5)
 			};
 			
-			int buttonWidth = 100;
-			int buttonHeight = 30;
-			editButton.Size = new Size(buttonWidth, buttonHeight);
-
-			//Location
-			int buttonX = panelWidth - buttonWidth - 90;
-			int buttonY = panelHeight - buttonHeight - 10;
-			editButton.Location = new Point(buttonX, buttonY);
-
-			//Toggle Configuration
-			RJToggleButton toggle = new RJToggleButton();
-			toggle.Checked = group.IsActive;
-			toggle.OnBackColor = Color.FromArgb(242, 169, 59);
-			toggle.Size = new Size(45, 22);
-			toggle.Location = new Point(panelWidth - 70, panelHeight - 35);
-			toggle.CheckedChanged += (x, y) =>
+			using var uiHelper = new UiHelper();
+			var nameLabel = uiHelper.CreateLabel(group.Name);
+			var descriptionLabel = uiHelper.CreateDescriptionLabel(group.Description, nameLabel.Height);
+			var toggle = uiHelper.CreateToggle( panel.Location.X+380, panel.Location.Y+25, group.IsActive, (sender, args) =>
 			{
 				group.IsActive = !group.IsActive;
-				_Manager.SaveChanges();
-			};
-
-			//Delete Button Configuration
-			Button deleteButton = new RJButton();
-			deleteButton.Text = "Delete";
-			deleteButton.BackColor = Color.FromArgb(69, 69, 69);
-			deleteButton.Click += (x, y) =>
+				Manager.SaveChanges();
+			});
+			var editButton = uiHelper.CreateButton(rm.GetString("edit"), panel.Location.X+440, panel.Location.Y+30,(sender, e) =>
 			{
-				_Manager.blockedSiteGroups.Remove(group);
-				flowLayoutPanel1.Controls.Remove(panel);
-				_Manager.SaveChanges();
-			};
-			deleteButton.Size = new Size(50, 22);
-			deleteButton.Location = new Point(editButton.Location.X+120, editButton.Location.Y-50);
+				var form = new EditGroup(group, nameLabel, descriptionLabel);
+				form.StartPosition = FormStartPosition.CenterScreen;
+				form.ShowDialog();
+			});
+			var deleteButton = uiHelper.CreateButton(rm.GetString("delete"), panel.Location.X+510, panel.Location.Y+30,(sender, args) =>
+			{
+				DialogResult result = MessageBox.Show("Devam etmek istiyor musunuz?", "Onay", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+				if (result == DialogResult.Yes)
+				{
+					Manager.BlockedSiteGroups.Remove(group);
+					flowLayoutPanel1.Controls.Remove(panel);
+					Manager.SaveChanges();
+				}
+
+			});
 
 			panel.Controls.Add(nameLabel);
 			panel.Controls.Add(descriptionLabel);
 			panel.Controls.Add(editButton);
 			panel.Controls.Add(toggle);
 			panel.Controls.Add(deleteButton);
-			
+
 			return panel;
-
 		}
-
-		private void create_group_button_Click(object sender, EventArgs e)
+		
+		private void create_group_button_Click_1(object sender, EventArgs e)
 		{
-			BlockedSiteGroup group = new BlockedSiteGroup();
-			group.Name = "new group";
-			List<string> sites = new List<string>();
-			group.Sites = sites;
-
-			Panel panel = CreateGroupPanel(group);
+			var group = new BlockedSiteGroup()
+			{
+				Name = rm.GetString("new_group"),
+				Sites = new List<string>()
+			};
+			
+			var panel = CreateGroupPanel(group);
+			
 			flowLayoutPanel1.Controls.Add(panel);
 
-			_Manager.blockedSiteGroups.Add(group);
-			_Manager.SaveChanges();
+			Manager.BlockedSiteGroups.Add(group);
+			Manager.SaveChanges();
 		}
+
+
 	}
 }
