@@ -8,15 +8,15 @@ using System.Reflection;
 using System.Resources;
 using DoNotWasteYourTime.Helpers;
 using ComponentFactory.Krypton.Toolkit;
-using DevExpress.Data.Filtering.Helpers;
 using DoNotWasteYourTime.CustomTools;
+using DoNotWasteYourTime.Models;
 
 namespace DoNotWasteYourTime
 {
 	public partial class Form1 : KryptonForm
 	{
 		public static SiteBlockerManager Manager;
-		readonly ResourceManager rm = new ResourceManager("DoNotWasteYourTime.Properties.Resources",Assembly.GetExecutingAssembly());
+		readonly ResourceManager rm = new("DoNotWasteYourTime.Properties.Resources",Assembly.GetExecutingAssembly());
 		public Form1()
 		{
 			InitializeComponent();

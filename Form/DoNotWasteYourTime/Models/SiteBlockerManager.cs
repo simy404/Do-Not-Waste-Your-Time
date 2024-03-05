@@ -1,9 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using Newtonsoft.Json;
 
-namespace DoNotWasteYourTime
+namespace DoNotWasteYourTime.Models
 {
 	public class SiteBlockerManager
 	{
@@ -18,6 +19,9 @@ namespace DoNotWasteYourTime
 		public string FilePath { get; set; }
 		public void SaveChanges()
 		{
+			if (string.IsNullOrWhiteSpace(FilePath))
+				throw new Exception("File path is not set");
+			
 			string json = JsonConvert.SerializeObject(this,Formatting.Indented);
 			File.WriteAllText(FilePath, json);
 		}
