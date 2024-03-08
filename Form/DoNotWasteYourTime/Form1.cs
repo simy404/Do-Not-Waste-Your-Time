@@ -6,10 +6,12 @@ using Newtonsoft.Json;
 using System.IO;
 using System.Reflection;
 using System.Resources;
+using System.Text;
 using DoNotWasteYourTime.Helpers;
 using ComponentFactory.Krypton.Toolkit;
 using DoNotWasteYourTime.CustomTools;
 using DoNotWasteYourTime.Models;
+using Microsoft.Extensions.Primitives;
 
 namespace DoNotWasteYourTime
 {
@@ -24,31 +26,42 @@ namespace DoNotWasteYourTime
 		
 		private void Form1_Load(object sender, EventArgs e)
 		{
-			var filePath = $"{Application.StartupPath}\\x.json";
+			string filePath = $"{Application.StartupPath}\\x.json";
 			
-			if (File.Exists(filePath))
-			{
-				using var streamReader = new StreamReader(filePath);
-				var json = streamReader.ReadToEnd();
-				
-				if (string.IsNullOrEmpty(json)) 
-					throw new NullReferenceException("json file does not read");
+			string json = LoadConfig(filePath);
+			
+			Manager = JsonConvert.DeserializeObject<SiteBlockerManager>(json);
+			Manager.FilePath = filePath;
 
-				Manager = JsonConvert.DeserializeObject<SiteBlockerManager>(json);
-				Manager.FilePath = filePath;
-				
-				foreach (var group in Manager.BlockedSiteGroups)
-				{
-					var panel = CreateGroupPanel(group);
-					flowLayoutPanel1.Controls.Add(panel);							
-				}
-			}
-			else 
+			RegisterControls(Manager.BlockedSiteGroups);
+
+		}
+		
+		private string LoadConfig(string filePath)
+		{
+			if (!File.Exists(filePath))
 			{
 				File.Create(filePath);
+				return null;
 			}
 			
-        }
+			using var streamReader = new StreamReader(filePath);
+			var json = streamReader.ReadToEnd();
+			
+			if (string.IsNullOrEmpty(json)) 
+				throw new NullReferenceException("json file does not read");
+
+			return json;
+		}
+
+		private void RegisterControls(IList<BlockedSiteGroup> blockedSiteGroups)
+		{
+			foreach (var group in blockedSiteGroups)
+			{
+				var panel = CreateGroupPanel(group);
+				flowLayoutPanel1.Controls.Add(panel);							
+			}
+		}
 		
 		private Panel CreateGroupPanel(BlockedSiteGroup group)
 		{
@@ -62,19 +75,23 @@ namespace DoNotWasteYourTime
 			};
 			
 			using var uiHelper = new UiHelper();
-			var nameLabel = uiHelper.CreateLabel(group.Name);
-			var descriptionLabel = uiHelper.CreateDescriptionLabel(group.Description, nameLabel.Height);
+			
+			var nameLabel = uiHelper.CreateLabel(group.Name,30, 30);
+			var descriptionLabel = uiHelper.CreateLabel(TextHelper.WrapText(group.Description, 15), 30, 70);
+			
 			var toggle = uiHelper.CreateToggle( panel.Location.X+380, panel.Location.Y+25, group.IsActive, (sender, args) =>
 			{
 				group.IsActive = !group.IsActive;
 				Manager.SaveChanges();
 			});
+			
 			var editButton = uiHelper.CreateButton(rm.GetString("edit"), panel.Location.X+440, panel.Location.Y+30,(sender, e) =>
 			{
 				var form = new EditGroup(group, nameLabel, descriptionLabel);
 				form.StartPosition = FormStartPosition.CenterScreen;
 				form.ShowDialog();
 			});
+			
 			var deleteButton = uiHelper.CreateButton(rm.GetString("delete"), panel.Location.X+510, panel.Location.Y+30,(sender, args) =>
 			{
 				DialogResult result = MessageBox.Show("Devam etmek istiyor musunuz?", "Onay", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -112,6 +129,8 @@ namespace DoNotWasteYourTime
 			Manager.BlockedSiteGroups.Add(group);
 			Manager.SaveChanges();
 		}
+		
+		
 
 
 	}

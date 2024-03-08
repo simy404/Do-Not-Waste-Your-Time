@@ -19,8 +19,8 @@ namespace DoNotWasteYourTime.Models
 		public string FilePath { get; set; }
 		public void SaveChanges()
 		{
-			if (string.IsNullOrWhiteSpace(FilePath))
-				throw new Exception("File path is not set");
+			if (string.IsNullOrWhiteSpace(FilePath) || !File.Exists(FilePath))
+				throw new Exception("File path is not set or File not exist");
 			
 			string json = JsonConvert.SerializeObject(this,Formatting.Indented);
 			File.WriteAllText(FilePath, json);

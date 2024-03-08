@@ -2,7 +2,6 @@
 using System;
 using System.Windows.Forms;
 using ComponentFactory.Krypton.Toolkit;
-
 namespace DoNotWasteYourTime
 {
 	public partial class EditGroup : KryptonForm
@@ -65,6 +64,8 @@ namespace DoNotWasteYourTime
 			sites_listbox.Items.Remove(sites_listbox.SelectedItem);
 			
 		}
+
+		
 
 	}	
 }

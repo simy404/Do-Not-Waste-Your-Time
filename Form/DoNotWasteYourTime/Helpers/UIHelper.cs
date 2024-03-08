@@ -7,14 +7,14 @@ namespace DoNotWasteYourTime.Helpers
 {
     public class UiHelper : IDisposable
     {
-		public Label CreateLabel(string name)
+		public Label CreateLabel(string name, int locationX, int locationY )
 		{
 			return new Label
 			{
 				Text = name,
 				Font = new Font(FontFamily.GenericSansSerif, 10, FontStyle.Bold),
 				AutoSize = true,
-				Location = new Point(30,30)
+				Location = new Point(locationX, locationY)
 			};
 		}
 		
@@ -54,15 +54,7 @@ namespace DoNotWasteYourTime.Helpers
 			return toggle;
 		}
 
-		public Label CreateDescriptionLabel(string description, int height)
-		{
-			return new Label
-			{
-				Text = description,
-				AutoSize = true,
-				Location = new Point(0, height + 5)
-			};
-		}
+		
 		
 		public void Dispose()
 		{
