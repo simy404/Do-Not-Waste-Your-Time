@@ -25,24 +25,29 @@ namespace DoNotWasteYourTime.Forms
 		private void Form1_Load(object sender, EventArgs e)
 		{
 			manager = SiteBlockerManager.GetInstance();
-			var config = manager.LoadConfig();
-			
-			
-			if (!string.IsNullOrEmpty(config))
-				manager.BlockedSiteGroups = (JsonConvert.DeserializeObject<List<IBlockedSiteGroup>>(config, new JsonSerializerSettings()
-				{
-					TypeNameHandling = TypeNameHandling.Auto
-				}));
-			
-
-			if (manager.BlockedSiteGroups is not null)
-				RegisterControls(manager.BlockedSiteGroups);
-			else
-				manager.BlockedSiteGroups = new List<IBlockedSiteGroup>();
-
+			manager.BlockedSiteGroups = DeserializeConfig<List<IBlockedSiteGroup>>(manager.LoadConfig()) ?? new List<IBlockedSiteGroup>();
+			RegisterControls(manager.BlockedSiteGroups);
 		}
+
+		private T DeserializeConfig<T>(string config) where T : class
+		{
+			if (string.IsNullOrEmpty(config))
+				return null;
+			
+			T deserializeObject = (JsonConvert.DeserializeObject<T>(config, new JsonSerializerSettings()
+			{
+				TypeNameHandling = TypeNameHandling.Auto
+			}));
+
+			return deserializeObject;
+		}
+		
+		
 		private void RegisterControls(IList<IBlockedSiteGroup> blockedSiteGroups)
 		{
+			if (!blockedSiteGroups.Any())
+				return;
+			
 			foreach (var blockedSiteGroup in blockedSiteGroups)
 			{
 				RegisterControl(blockedSiteGroup);

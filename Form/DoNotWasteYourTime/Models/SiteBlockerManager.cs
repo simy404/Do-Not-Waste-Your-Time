@@ -34,6 +34,7 @@ namespace DoNotWasteYourTime.Models
 			{
 				TypeNameHandling = TypeNameHandling.Auto
 			});
+			
 			File.WriteAllText(filePath, json);
 		}
 		
