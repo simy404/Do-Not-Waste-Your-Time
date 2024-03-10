@@ -82,6 +82,15 @@ namespace DoNotWasteYourTime.Properties {
         }
         
         /// <summary>
+        ///   Confirm benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string confirm {
+            get {
+                return ResourceManager.GetString("confirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Delete benzeri yerelleştirilmiş bir dize arar.
         /// </summary>
         internal static string delete {
@@ -96,6 +105,15 @@ namespace DoNotWasteYourTime.Properties {
         internal static string description {
             get {
                 return ResourceManager.GetString("description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Do you want to continue? benzeri yerelleştirilmiş bir dize arar.
+        /// </summary>
+        internal static string do_you_want_to_continue {
+            get {
+                return ResourceManager.GetString("do_you_want_to_continue", resourceCulture);
             }
         }
         

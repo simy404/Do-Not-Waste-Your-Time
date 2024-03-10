@@ -7,6 +7,17 @@ namespace DoNotWasteYourTime.Helpers
 {
     public class UiHelper : IDisposable
     {
+	    public Panel CreatePanel(int width, int height)
+	    {
+		    return new RJPanel()
+		    {
+			    BorderStyle = BorderStyle.None,
+			    Width = width,
+			    Height = height,
+			    BackColor = Color.FromArgb(240, 240, 240),
+			    Margin =  new Padding(0,0,0,5)
+		    };
+	    }
 		public Label CreateLabel(string name, int locationX, int locationY )
 		{
 			return new Label

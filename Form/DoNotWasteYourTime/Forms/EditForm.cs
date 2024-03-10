@@ -29,7 +29,7 @@ namespace DoNotWasteYourTime.Forms
 			
 			foreach(var site  in group.Sites) 
 			{
-				sites_listbox.Items.Add(site);
+				sites_listbox.Items.Add(site.Url);
 			}
 			
 		}

@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Resources;
 using System.Windows.Forms;
 using ComponentFactory.Krypton.Toolkit;
-using DoNotWasteYourTime.CustomTools;
 using DoNotWasteYourTime.Helpers;
 using DoNotWasteYourTime.Models;
 using Newtonsoft.Json;
@@ -62,19 +60,11 @@ namespace DoNotWasteYourTime.Forms
 		
 		private Panel CreateGroupPanel(IBlockedSiteGroup group)
 		{
-			var panel = new RJPanel()
-			{
-				BorderStyle = BorderStyle.None,
-				Width = (flowLayoutPanel1.Size.Width-30),
-				Height = flowLayoutPanel1.Size.Height/2,
-				BackColor = Color.FromArgb(240, 240, 240),
-				Margin =  new Padding(0,0,0,5)
-			};
-			
 			using var uiHelper = new UiHelper();
-			
+
+			var panel = uiHelper.CreatePanel(flowLayoutPanel1.Size.Width - 30, flowLayoutPanel1.Size.Height / 2);
 			var nameLabel = uiHelper.CreateLabel(group.Name,30, 30);
-			var descriptionLabel = uiHelper.CreateLabel(TextHelper.WrapText(group.Description, 15), 30, 70);
+			var descriptionLabel = uiHelper.CreateLabel(group.Description, 30, 70);
 			
 			var toggle = uiHelper.CreateToggle( panel.Location.X+380, panel.Location.Y+25, group.IsActive, (sender, args) =>
 			{
@@ -91,9 +81,9 @@ namespace DoNotWasteYourTime.Forms
 			
 			var deleteButton = uiHelper.CreateButton(rm.GetString("delete"), panel.Location.X+510, panel.Location.Y+30,(sender, args) =>
 			{
-				DialogResult result = MessageBox.Show("Devam etmek istiyor musunuz?", "Onay", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+				DialogResult result = MessageBox.Show(rm.GetString("do_you_want_to_continue"), rm.GetString("confirm"), MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
-				if (result == DialogResult.Yes)
+				if (result is DialogResult.Yes)
 				{
 					manager.BlockedSiteGroups.Remove(group);
 					flowLayoutPanel1.Controls.Remove(panel);
@@ -111,12 +101,12 @@ namespace DoNotWasteYourTime.Forms
 			return panel;
 		}
 		
-		private void create_group_button_Click_1(object sender, EventArgs e)
+		private void create_group_button_Click(object sender, EventArgs e)
 		{
 			Site site = new Site()
 			{
 				Id = 1,
-				Url = "",
+				Url = "Deneme",
 				VisitLogs = new List<SiteVisitLog>
 				{
 					new SiteVisitLog()
@@ -141,8 +131,5 @@ namespace DoNotWasteYourTime.Forms
 			manager.SaveChanges();
 		}
 		
-		
-
-
 	}
 }

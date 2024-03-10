@@ -165,4 +165,10 @@ YOUR TİME</value>
   <data name="edit" xml:space="preserve">
     <value>Edit</value>
   </data>
+  <data name="do_you_want_to_continue" xml:space="preserve">
+    <value>Do you want to continue?</value>
+  </data>
+  <data name="confirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
 </root>

@@ -163,7 +163,7 @@
 			this.create_group_button.StateTracking.Content.ShortText.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
 			this.create_group_button.TabIndex = 5;
 			this.create_group_button.Values.Text = "Create";
-			this.create_group_button.Click += new System.EventHandler(this.create_group_button_Click_1);
+			this.create_group_button.Click += new System.EventHandler(this.create_group_button_Click);
 			// 
 			// kryptonButton2
 			// 
