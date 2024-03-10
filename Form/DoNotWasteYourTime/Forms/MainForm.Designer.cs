@@ -1,6 +1,6 @@
-﻿namespace DoNotWasteYourTime
+﻿namespace DoNotWasteYourTime.Forms
 {
-	partial class Form1
+	partial class MainForm
 	{
 		/// <summary>
 		///Gerekli tasarımcı değişkeni.
@@ -29,7 +29,7 @@
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
 			this.kryptonPalette1 = new ComponentFactory.Krypton.Toolkit.KryptonPalette(this.components);
 			this.groups_label = new System.Windows.Forms.Label();
 			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
@@ -323,7 +323,7 @@
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MaximumSize = new System.Drawing.Size(850, 500);
 			this.MinimumSize = new System.Drawing.Size(850, 500);
-			this.Name = "Form1";
+			this.Name = "MainForm";
 			this.Palette = this.kryptonPalette1;
 			this.PaletteMode = ComponentFactory.Krypton.Toolkit.PaletteMode.Custom;
 			this.ShowIcon = false;

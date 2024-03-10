@@ -1,69 +1,61 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Windows.Forms;
-using Newtonsoft.Json;
-using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Resources;
-using System.Text;
-using DoNotWasteYourTime.Helpers;
+using System.Windows.Forms;
 using ComponentFactory.Krypton.Toolkit;
 using DoNotWasteYourTime.CustomTools;
+using DoNotWasteYourTime.Helpers;
 using DoNotWasteYourTime.Models;
-using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
 
-namespace DoNotWasteYourTime
+namespace DoNotWasteYourTime.Forms
 {
-	public partial class Form1 : KryptonForm
+	public partial class MainForm : KryptonForm
 	{
-		public static SiteBlockerManager Manager;
-		readonly ResourceManager rm = new("DoNotWasteYourTime.Properties.Resources",Assembly.GetExecutingAssembly());
-		public Form1()
+		private SiteBlockerManager manager;
+		private readonly ResourceManager rm = new("DoNotWasteYourTime.Properties.Resources",Assembly.GetExecutingAssembly());
+		public MainForm()
 		{
 			InitializeComponent();
 		}
 		
 		private void Form1_Load(object sender, EventArgs e)
 		{
-			string filePath = $"{Application.StartupPath}\\x.json";
+			manager = SiteBlockerManager.GetInstance();
+			var config = manager.LoadConfig();
 			
-			string json = LoadConfig(filePath);
 			
-			Manager = JsonConvert.DeserializeObject<SiteBlockerManager>(json);
-			Manager.FilePath = filePath;
+			if (!string.IsNullOrEmpty(config))
+				manager.BlockedSiteGroups = (JsonConvert.DeserializeObject<List<IBlockedSiteGroup>>(config, new JsonSerializerSettings()
+				{
+					TypeNameHandling = TypeNameHandling.Auto
+				}));
+			
 
-			RegisterControls(Manager.BlockedSiteGroups);
+			if (manager.BlockedSiteGroups is not null)
+				RegisterControls(manager.BlockedSiteGroups);
+			else
+				manager.BlockedSiteGroups = new List<IBlockedSiteGroup>();
 
 		}
-		
-		private string LoadConfig(string filePath)
+		private void RegisterControls(IList<IBlockedSiteGroup> blockedSiteGroups)
 		{
-			if (!File.Exists(filePath))
+			foreach (var blockedSiteGroup in blockedSiteGroups)
 			{
-				File.Create(filePath);
-				return null;
-			}
-			
-			using var streamReader = new StreamReader(filePath);
-			var json = streamReader.ReadToEnd();
-			
-			if (string.IsNullOrEmpty(json)) 
-				throw new NullReferenceException("json file does not read");
-
-			return json;
-		}
-
-		private void RegisterControls(IList<BlockedSiteGroup> blockedSiteGroups)
-		{
-			foreach (var group in blockedSiteGroups)
-			{
-				var panel = CreateGroupPanel(group);
-				flowLayoutPanel1.Controls.Add(panel);							
+				RegisterControl(blockedSiteGroup);
 			}
 		}
+
+		private void RegisterControl(IBlockedSiteGroup blockedSiteGroup)
+		{
+			var panel = CreateGroupPanel(blockedSiteGroup);
+			flowLayoutPanel1.Controls.Add(panel);
+		}
 		
-		private Panel CreateGroupPanel(BlockedSiteGroup group)
+		private Panel CreateGroupPanel(IBlockedSiteGroup group)
 		{
 			var panel = new RJPanel()
 			{
@@ -82,7 +74,7 @@ namespace DoNotWasteYourTime
 			var toggle = uiHelper.CreateToggle( panel.Location.X+380, panel.Location.Y+25, group.IsActive, (sender, args) =>
 			{
 				group.IsActive = !group.IsActive;
-				Manager.SaveChanges();
+				manager.SaveChanges();
 			});
 			
 			var editButton = uiHelper.CreateButton(rm.GetString("edit"), panel.Location.X+440, panel.Location.Y+30,(sender, e) =>
@@ -98,9 +90,9 @@ namespace DoNotWasteYourTime
 
 				if (result == DialogResult.Yes)
 				{
-					Manager.BlockedSiteGroups.Remove(group);
+					manager.BlockedSiteGroups.Remove(group);
 					flowLayoutPanel1.Controls.Remove(panel);
-					Manager.SaveChanges();
+					manager.SaveChanges();
 				}
 
 			});
@@ -116,18 +108,32 @@ namespace DoNotWasteYourTime
 		
 		private void create_group_button_Click_1(object sender, EventArgs e)
 		{
-			var group = new BlockedSiteGroup()
+			Site site = new Site()
 			{
-				Name = rm.GetString("new_group"),
-				Sites = new List<string>()
+				Id = 1,
+				Url = "",
+				VisitLogs = new List<SiteVisitLog>
+				{
+					new SiteVisitLog()
+					{
+						Id = 1,
+						VisitTime = new List<DateTime>()
+						{
+							DateTime.Now
+						}
+					}
+				}
 			};
 			
-			var panel = CreateGroupPanel(group);
+			var group = new BlockedSiteGroup(0, rm.GetString("new_group"), "Description", false, new List<Site>()
+			{
+				site
+			});
 			
-			flowLayoutPanel1.Controls.Add(panel);
-
-			Manager.BlockedSiteGroups.Add(group);
-			Manager.SaveChanges();
+			RegisterControl(group);
+			
+			manager.BlockedSiteGroups.Add(group);
+			manager.SaveChanges();
 		}
 		
 		

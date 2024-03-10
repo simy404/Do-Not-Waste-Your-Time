@@ -1,6 +1,4 @@
-﻿using DoNotWasteYourTime.CustomTools;
-
-namespace DoNotWasteYourTime
+﻿namespace DoNotWasteYourTime.Forms
 {
 	partial class EditGroup
 	{
