@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
-using Newtonsoft.Json;
+using DoNotWasteYourTime.Helpers;
 
 namespace DoNotWasteYourTime.Models
 {
@@ -30,10 +30,8 @@ namespace DoNotWasteYourTime.Models
 			if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
 				throw new Exception("File path is not set or File not exist");
 			
-			string json = JsonConvert.SerializeObject(BlockedSiteGroups, Formatting.Indented, new JsonSerializerSettings()
-			{
-				TypeNameHandling = TypeNameHandling.Auto
-			});
+			JsonParser jsonParser = new JsonParser();
+			string json = jsonParser.ModelToJsonResultParse<List<IBlockedSiteGroup>>(BlockedSiteGroups);
 			
 			File.WriteAllText(filePath, json);
 		}

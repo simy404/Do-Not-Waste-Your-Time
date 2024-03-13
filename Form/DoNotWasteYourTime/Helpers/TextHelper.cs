@@ -6,6 +6,7 @@ namespace DoNotWasteYourTime.Helpers;
 
 public class TextHelper
 {
+    [Obsolete]
     public static string WrapText(string text ,int wrapIndex)
     {
         if (string.IsNullOrEmpty(text))
@@ -36,4 +37,5 @@ public class TextHelper
 
         return textBuilder.ToString();
     }
+    
 }

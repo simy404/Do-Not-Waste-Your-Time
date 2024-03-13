@@ -10,14 +10,15 @@ namespace DoNotWasteYourTime.UI;
 
 public class PanelBuilder
 {
-    private IBlockedSiteGroup group;
-    private FlowLayoutPanel flowLayoutPanel;
-    public PanelBuilder(IBlockedSiteGroup _group, FlowLayoutPanel _flowLayoutPanel)
+    private readonly IBlockedSiteGroup group;
+    private readonly FlowLayoutPanel flowLayoutPanel;
+    public PanelBuilder(IBlockedSiteGroup group, FlowLayoutPanel flowLayoutPanel)
     {
-        group = _group;
-        flowLayoutPanel = _flowLayoutPanel;
+        this.group = group;
+        this.flowLayoutPanel = flowLayoutPanel ?? throw new ArgumentNullException(nameof(flowLayoutPanel));
     }
-    private Panel Build()
+    
+    public Panel Build()
     {
         using var uiHelper = new UiHelper();
         SiteBlockerManager manager = SiteBlockerManager.GetInstance();

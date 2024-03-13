@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
+using DoNotWasteYourTime.Models;
 using Newtonsoft.Json;
 
-namespace DoNotWasteYourTime.Models;
+namespace DoNotWasteYourTime.Helpers;
 
 public class JsonParser
 {
@@ -31,7 +32,7 @@ public class JsonParser
     {
         try
         {
-            string json = JsonConvert.SerializeObject(typeof(T), Formatting.Indented, new JsonSerializerSettings()
+            string json = JsonConvert.SerializeObject(model, Formatting.Indented, new JsonSerializerSettings()
             {
                 TypeNameHandling = TypeNameHandling.Auto
             });
@@ -44,5 +45,4 @@ public class JsonParser
             return null;
         }
     }
-    
 }

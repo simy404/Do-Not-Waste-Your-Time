@@ -80,6 +80,7 @@
 			// 
 			this.add_site_label.AutoSize = true;
 			this.add_site_label.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+			this.add_site_label.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.add_site_label.Location = new System.Drawing.Point(44, 243);
 			this.add_site_label.Name = "add_site_label";
 			this.add_site_label.Size = new System.Drawing.Size(69, 19);

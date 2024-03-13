@@ -1,0 +1,51 @@
+{
+  "manifest_version": 3,
+  "name": "DNWYT",
+  "description": "Do Not Waste Your Time",
+  "version": "1.0",
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "hello_extensions.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": [
+    "scripting",
+    "activeTab",
+    "storage",
+    "webRequest",
+    "declarativeNetRequestWithHostAccess",
+    "storage",
+    "tabs",
+    "webNavigation",
+    "webRequest",
+    "declarativeContent",
+    "storage",
+    "declarativeNetRequest"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content-script.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "data/x.json"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ]
+
+}
+  

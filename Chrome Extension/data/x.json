@@ -1,0 +1,21 @@
+[
+  {
+    "$type": "DoNotWasteYourTime.Models.BlockedSiteGroup, DoNotWasteYourTime",
+    "Id": 0,
+    "Name": "Engellemek istediğim siteler",
+    "Description": "Bunlar vaktimi yiyen siteler",
+    "IsActive": true,
+    "Sites": [
+      {
+        "Id": 0,
+        "Url": "twitch.tv",
+        "VisitLogs": null
+      },
+      {
+        "Id": 0,
+        "Url": "twitter.com",
+        "VisitLogs": null
+      }
+    ]
+  }
+]

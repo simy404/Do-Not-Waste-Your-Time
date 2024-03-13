@@ -25,7 +25,8 @@ namespace DoNotWasteYourTime.Helpers
 				Text = name,
 				Font = new Font(FontFamily.GenericSansSerif, 10, FontStyle.Bold),
 				AutoSize = true,
-				Location = new Point(locationX, locationY)
+				Location = new Point(locationX, locationY),
+				ForeColor = Color.FromArgb(60, 60, 60)
 			};
 		}
 		
@@ -64,8 +65,6 @@ namespace DoNotWasteYourTime.Helpers
 			
 			return toggle;
 		}
-
-		
 		
 		public void Dispose()
 		{
