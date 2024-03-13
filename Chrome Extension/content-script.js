@@ -10,7 +10,7 @@ fetch(url)
 
 function logSites(data) {
     for (let i = 0; i < data.length; i++) {
-        if(data[i].IsActive == false) continue;
+        if(data[i].IsActive === false) continue;
 
         data[i].Sites.forEach(site => {
             if (window.location.href.includes(site.Url)) {
