@@ -1,4 +1,4 @@
-﻿namespace DoNotWasteYourTime.Forms
+﻿namespace DoNotWasteYourTime.UI.Forms
 {
 	partial class MainForm
 	{

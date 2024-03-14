@@ -6,7 +6,7 @@ using DoNotWasteYourTime.Forms;
 using DoNotWasteYourTime.Helpers;
 using DoNotWasteYourTime.Models;
 
-namespace DoNotWasteYourTime.UI;
+namespace DoNotWasteYourTime.UI.Components;
 
 public class PanelBuilder
 {

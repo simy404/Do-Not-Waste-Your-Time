@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using DoNotWasteYourTime.Forms;
+using DoNotWasteYourTime.UI.Forms;
 
 namespace DoNotWasteYourTime
 {

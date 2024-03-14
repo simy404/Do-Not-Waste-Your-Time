@@ -9,7 +9,7 @@ using DoNotWasteYourTime.Helpers;
 using DoNotWasteYourTime.Models;
 using DoNotWasteYourTime.UI.Components;
 
-namespace DoNotWasteYourTime.Forms
+namespace DoNotWasteYourTime.UI.Forms
 {
 	public partial class MainForm : KryptonForm
 	{
