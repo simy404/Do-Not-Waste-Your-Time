@@ -5,10 +5,9 @@ using System.Reflection;
 using System.Resources;
 using System.Windows.Forms;
 using ComponentFactory.Krypton.Toolkit;
-using DoNotWasteYourTime.CustomTools;
 using DoNotWasteYourTime.Helpers;
 using DoNotWasteYourTime.Models;
-using DoNotWasteYourTime.UI;
+using DoNotWasteYourTime.UI.Components;
 
 namespace DoNotWasteYourTime.Forms
 {
@@ -26,6 +25,7 @@ namespace DoNotWasteYourTime.Forms
 			manager = SiteBlockerManager.GetInstance();
 			manager.BlockedSiteGroups = DeserializeConfig<List<IBlockedSiteGroup>>(manager.LoadConfig());
 			RegisterControls(manager.BlockedSiteGroups);
+            
 		}
 
 		private T DeserializeConfig<T>(string config) where T : class, new()
@@ -60,16 +60,6 @@ namespace DoNotWasteYourTime.Forms
 		{
 			PanelBuilder controlPanelBuilder = new PanelBuilder(group, flowLayoutPanel1);
 			return controlPanelBuilder.Build();
-		}
-
-		private Label CreateLabelControl(string text, int locationX, int locationY, UiHelper helper )
-		{
-			return helper.CreateLabel(text,30, 30);
-		}
-		
-		private RJToggleButton CreateToggleControl(int with, int height, bool isActive, EventHandler eventHandler, UiHelper helper)
-		{
-			return helper.CreateToggle(with, height, isActive, eventHandler);
 		}
 		
 		private void create_group_button_Click(object sender, EventArgs e)
